@@ -1,0 +1,162 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Arial", sans-serif;
+}
+
+/* Background */
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #eef3ff;
+}
+
+/* Card Container */
+.container {
+    text-align: center;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 90%;
+}
+
+/* Logo */
+.logo img {
+    width: 100px;
+    margin-bottom: 10px;
+}
+
+.logo h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #111;
+}
+
+.logo p {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Age Selection */
+.age-selection {
+    margin-top: 20px;
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #888;
+}
+
+/* Styled Slider */
+.slider {
+    width: 100%;
+    margin: 10px 0;
+    -webkit-appearance: none;
+    height: 6px;
+    background: #ddd;
+    border-radius: 5px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.age-display {
+    font-size: 40px;
+    font-weight: bold;
+    color: #007bff;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    flex-direction: column;
+    align-items: center;
+}
+
+.age-display p {
+    font-size: 14px;
+    color: #777;
+    margin-left: 5px;
+}
+
+/* Continue Button */
+.continue-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    background: #007bff;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.continue-btn:hover {
+    background: #0056b3;
+}
+
+/* Policy Text */
+.policy {
+    margin-top: 15px;
+    font-size: 12px;
+    color: #777;
+}
+
+.policy a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.policy a:hover {
+    text-decoration: underline;
+}
+
+/* Alert Box */
+#alertBox {
+    display: none;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f8f9fa;
+    color: #333;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* Alert icon */
+.alert-icon {
+    margin-right: 8px;
+}
+
+/* Disabled button */
+.disabled {
+    background-color: gray !important;
+    cursor: not-allowed;
+    opacity: 0.7;
+}

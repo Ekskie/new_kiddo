@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drawing App</title>
+  <link rel="stylesheet" href="/static/community_drawing.css">
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <h1 class="title">Draw at Your Own</h1>
+      <div class="header-buttons">
+        <button id="share-btn" class="btn btn-outline">
+          <span class="icon"><i data-lucide="share-2"></i></span>
+          Share
+        </button>
+        <button id="save-btn" class="btn btn-primary">
+          <span class="icon"><i data-lucide="download"></i></span>
+          Save
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <div class="toolbar">
+        <div class="tool-group">
+          <span class="tool-label">Brush Type:</span>
+          <select id="brush-type" class="tool-select">
+            <option value="round">Round</option>
+            <option value="square">Square</option>
+            <option value="solid">Solid</option>
+            <option value="calligraphy">Calligraphy</option>
+          </select>
+        </div>
+
+        <div class="tool-group">
+          <span class="tool-label">Color:</span>
+          <div class="color-picker">
+            <div id="current-color" class="color-swatch"></div>
+            <div id="color-palette" class="color-palette hidden">
+              <div class="color-swatch" data-color="#000000"></div>
+              <div class="color-swatch" data-color="#FFFFFF"></div>
+              <div class="color-swatch" data-color="#FE6D79"></div>
+              <div class="color-swatch" data-color="#5C7AEA"></div>
+              <div class="color-swatch" data-color="#FFB996"></div>
+              <div class="color-swatch" data-color="#2A2F4F"></div>
+              <div class="color-swatch" data-color="#4CAF50"></div>
+              <div class="color-swatch" data-color="#FFC107"></div>
+              <div class="color-swatch" data-color="#9C27B0"></div>
+              <div class="color-swatch" data-color="#FF5722"></div>
+              <input type="color" id="custom-color" value="#000000">
+            </div>
+          </div>
+        </div>
+
+        <div class="tool-group">
+          <span class="tool-label">Smoothing:</span>
+          <div class="slider-container">
+            <input type="range" id="smoothing-slider" min="0" max="10" value="5" class="slider">
+            <span id="smoothing-value" class="slider-value">5</span>
+          </div>
+        </div>
+
+        <div class="tool-group">
+          <span class="tool-label">Size:</span>
+          <div class="slider-container">
+            <div class="brush-preview-container">
+              <div id="brush-preview" class="brush-preview"></div>
+            </div>
+            <input type="range" id="size-slider" min="1" max="50" value="10" class="slider">
+            <span id="size-value" class="slider-value">10</span>
+          </div>
+        </div>
+
+        <div class="tool-buttons">
+          <button id="brush-tool" class="tool-button active" title="Brush">
+            <i data-lucide="pen-tool"></i>
+          </button>
+          <button id="eraser-tool" class="tool-button" title="Eraser">
+            <i data-lucide="eraser"></i>
+          </button>
+          <button id="clear-canvas" class="tool-button" title="Clear Canvas">
+            <i data-lucide="trash-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="canvas-container">
+        <canvas id="drawing-canvas"></canvas>
+      </div>
+    </main>
+
+    <footer>
+      <button id="save-footer" class="btn btn-outline">
+        <i data-lucide="download"></i>
+        Save to Device
+      </button>
+      <button id="back-btn" class="btn btn-outline" onclick="window.location.href='/community'">
+        <i data-lucide="arrow-left"></i>
+        Back to Community
+      </button>
+      <button id="clear-footer" class="btn btn-danger">
+        <i data-lucide="trash-2"></i>
+        Clear Canvas
+      </button>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast hidden">
+    <div class="toast-content">
+      <span id="toast-message"></span>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="/static/community_drawing.js"></script>
+</body>
+</html>

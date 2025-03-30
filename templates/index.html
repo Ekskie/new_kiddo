@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Kiddo</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <div id="alertBox" class="alert">
+                <span class="alert-icon">⚠️</span>
+                <p>You must be at least 13 years old to use this application.</p>
+            </div>
+
+            <div class="logo">
+                <img src="/static/images/logo.png" alt="Kiddo Logo">
+                <h1>Welcome to Kiddo</h1>
+                <p>Before we continue, please let us know your age</p>
+            </div>
+
+            <div class="age-selection">
+                <div class="slider-labels">
+                    <span>0</span>
+                    <span>&nbsp; &nbsp; 50</span>
+                    <span>100</span>
+                </div>
+                <input type="range" min="0" max="100" value="0" class="slider" id="ageSlider">
+                <div class="age-display">
+                    <span id="ageValue">0</span>
+                    <p>years old</p>
+                </div>
+            </div>
+
+            <button class="continue-btn">Continue</button>
+
+            <div class="policy">
+                <p>By continuing, you agree to our <a href="/term">Terms</a> and <a href="/privacyPolicy">Privacy
+                        Policy</a>.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ageSlider = document.getElementById("ageSlider");
+        const ageValue = document.getElementById("ageValue");
+
+        ageSlider.addEventListener("input", function () {
+            ageValue.textContent = this.value;
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const ageSlider = document.getElementById("ageSlider");
+            const ageValue = document.getElementById("ageValue");
+            const continueBtn = document.querySelector(".continue-btn");
+            const alertBox = document.getElementById("alertBox");
+
+            // Show the alert message
+            function showAlert() {
+                alertBox.style.display = "flex"; // Show alert
+                setTimeout(() => {
+                    alertBox.style.opacity = "1"; // Fade in
+                }, 10);
+
+                setTimeout(() => {
+                    alertBox.style.opacity = "0"; // Fade out after 3s
+                    setTimeout(() => {
+                        alertBox.style.display = "none";
+                    }, 500);
+                }, 3000);
+            }
+
+            continueBtn.addEventListener("click", function (event) {
+                const age = parseInt(ageSlider.value);
+
+                if (age < 13) {
+                    event.preventDefault();
+                    showAlert();
+                } else {
+                    window.location.href = "/login";
+                }
+            });
+
+        });
+
+    </script>
+</body>
+
+</html>

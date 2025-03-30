@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kiddo - Who's Playing?</title>
+  <style>
+    /* Basic Reset */
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    header {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo {
+      width: 60px;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 2rem 1rem;
+    }
+
+    .who-heading {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 1.5rem;
+    }
+
+    .profiles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
+    /* Profile Card Style */
+    .profile-card {
+      background: #fff;
+      width: 120px;
+      height: 120px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .profile-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    }
+
+    .profile-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.25rem;
+      color: #333;
+    }
+
+    .profile-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #444;
+    }
+
+    .profile-add-icon {
+      font-size: 3rem;
+      color: #777;
+    }
+
+    /* Parent Login Section */
+    .parent-login {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      font-size: 1rem;
+      color: #333;
+      cursor: pointer;
+    }
+    .parent-login:hover {
+      text-decoration: underline;
+    }
+
+    .parent-login i {
+      font-size: 1.2rem;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Optional header with Kiddo logo and title -->
+  <header>
+    <img src="/static/images/logo.png" alt="Kiddo Logo" class="logo">
+    <span class="page-title">Kiddo</span>
+  </header>
+
+  <div class="container">
+    <h1 class="who-heading">Who's Playing</h1>
+    <div class="profiles">
+      <!-- Parent's profile card -->
+      <div class="profile-card" onclick="window.location.href='/community'">
+        <!-- An example face icon; you can use an SVG or an emoji -->
+        <div class="profile-icon">☺</div>
+        <div class="profile-name">Denn</div>
+      </div>
+      
+      <!-- Add child card -->
+      <div class="profile-card" onclick="window.location.href='https://kiddo-nine.vercel.app/'">
+        <div class="profile-add-icon">+</div>
+        <div class="profile-name">Add Child</div>
+      </div>
+    </div>
+
+    <!-- Parent login link -->
+    <div class="parent-login" onclick="window.location.href='/community'">
+      <i class="fa fa-user-circle" aria-hidden="true"></i>
+      <span>Login to Denn's Parent Profile</span>
+    </div>
+  </div>
+
+  <!-- Font Awesome (for the parent icon) -->
+  <script src="https://kit.fontawesome.com/266011b4bf.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

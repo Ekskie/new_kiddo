@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ArtShare Community</title>
+    <link rel="stylesheet" href="/static/Community.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-left">
+                <img src="/static/images/logo.png" alt="Kiddo logo" class="logo" />
+                <h1 class="title">ArtShare</h1>
+            </div>
+            <div class="header-right">
+                <button class="icon-button" id="drawingBtn" onclick="window.location.href='/community_drawing'">
+                    <i data-lucide="pen"></i>
+                </button>
+                <button class="icon-button" id="profileBtn" onclick="window.location.href='/whosplaying'">
+                    <i data-lucide="users"></i>
+                </button>
+                <button class="icon-button" id="logoutBtn">
+                    <i data-lucide="log-out"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="create-post">
+            <div class="create-post-content">
+                <div class="create-post-top">
+                    <div class="avatar">
+                        <span class="avatar-text">{{ current_email[:2]|upper }}</span>
+                    </div>
+                    <div class="create-post-input">
+                        <!-- Optionally, you may keep a caption textarea -->
+                        <textarea placeholder="Share your artwork with the community..."></textarea>
+                        <div class="image-preview hidden">
+                            <button class="close-button">
+                                <i data-lucide="x"></i>
+                            </button>
+                            <img src="" alt="Preview" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="create-post-actions">
+                    <label class="upload-button">
+                        <i data-lucide="image"></i>
+                        <span>Add artwork</span>
+                        <input type="file" accept="image/*" id="fileInput" hidden>
+                    </label>
+                    <button class="post-button" id="postBtn">
+                        <i data-lucide="send"></i>
+                        Post
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Posts Container -->
+        <div class="posts" id="postsContainer">
+            <!-- Community posts will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            // Check for active session via your Flask endpoint
+            const sessionResponse = await fetch("/check_session");
+            const sessionData = await sessionResponse.json();
+            if (!sessionData.session) {
+                window.location.href = "/login";
+                return;
+            }
+
+            // Logout functionality
+            const logoutBtn = document.getElementById("logoutBtn");
+            if (logoutBtn) {
+                logoutBtn.addEventListener("click", async function () {
+                    const logoutResponse = await fetch("/signout");
+                    const logoutData = await logoutResponse.json();
+                    if (logoutData.status === "success") {
+                        window.location.href = "/login";
+                    } else {
+                        console.error("Logout error:", logoutData.message);
+                    }
+                });
+            }
+
+            // Fetch community posts from Flask endpoint
+            async function fetchPosts() {
+                try {
+                    const response = await fetch("/get_posts");
+                    const data = await response.json();
+                    if (data.status === "success") {
+                        const postsContainer = document.getElementById("postsContainer");
+                        postsContainer.innerHTML = "";
+                        data.posts.forEach(post => {
+                            const likeCount = (post.like_count !== undefined) ? post.like_count : 0;
+                            const isLiked = post.liked;
+                            const icon = isLiked ? 'heart' : 'thumbs-up';
+                            const iconColor = isLiked ? " style='color: #ec4899;'" : "";
+                            const postDiv = document.createElement("div");
+                            postDiv.classList.add("post");
+                            postDiv.setAttribute("data-post-id", post.id);
+                            postDiv.innerHTML = `
+                <div class="post-header">
+                  <div class="avatar">
+                    <span class="avatar-text">${post.username.slice(0, 2).toUpperCase()}</span>
+                  </div>
+                  <div class="post-user-info">
+                    <p class="post-username">${post.username}</p>
+                    <p class="post-time">${new Date(post.created_at).toLocaleString()}</p>
+                  </div>
+                </div>
+                <div class="post-content">
+                  <p class="post-caption">${post.caption || ""}</p>
+                  <div class="post-image">
+                    <img src="${post.image_url}" alt="Artwork" loading="lazy">
+                  </div>
+                </div>
+                <div class="post-stats">
+                  <span id="like-count-${post.id}">${likeCount} likes</span>
+                  <span>${post.comments || 0} comments</span>
+                </div>
+                <div class="post-actions">
+                  <button id="like-btn-${post.id}" class="post-action-button like-button">
+                    <i id="like-icon-${post.id}" data-lucide="${icon}"${iconColor}></i>
+                  </button>
+                  <button class="post-action-button">
+                    <i data-lucide="message-circle"></i>
+                    <span>Comment</span>
+                  </button>
+                  <button class="post-action-button">
+                    <i data-lucide="share-2"></i>
+                    <span>Share</span>
+                  </button>
+                </div>
+              `;
+                            postsContainer.appendChild(postDiv);
+                        });
+                        lucide.createIcons();
+                    } else {
+                        console.error("Error fetching posts:", data.message);
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                }
+            }
+
+            fetchPosts();
+
+            // Delegate like button events on postsContainer
+            document.getElementById("postsContainer").addEventListener("click", async function (event) {
+                const likeButton = event.target.closest('.like-button');
+                if (!likeButton) return;
+
+                const postDiv = likeButton.closest('.post');
+                const drawingId = postDiv.getAttribute('data-post-id');
+                if (!drawingId) {
+                    console.error("Drawing ID not found");
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/like_post', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ drawing_id: drawingId })
+                    });
+
+                    const result = await response.json();
+                    if (result.status === "success") {
+                        const likeCountSpan = document.getElementById(`like-count-${drawingId}`);
+                        likeCountSpan.textContent = `${result.likes} likes`;
+
+                        let icon = document.getElementById(`like-icon-${drawingId}`);
+                        if (!icon) {
+                            console.error("Icon element not found for drawing", drawingId);
+                            return;
+                        }
+
+                        if (result.liked) {
+                            likeButton.classList.add('liked');
+                            icon.outerHTML = `<i id="like-icon-${drawingId}" data-lucide="heart" style="color: #ec4899;"></i>`;
+                        } else {
+                            likeButton.classList.remove('liked');
+                            icon.outerHTML = `<i id="like-icon-${drawingId}" data-lucide="thumbs-up"></i>`;
+                        }
+                        lucide.createIcons();
+                    } else {
+                        console.error("Error toggling like:", result.message);
+                    }
+                } catch (error) {
+                    console.error("Error in like button:", error);
+                }
+            });
+
+            // Handle file upload and image preview
+            const fileInput = document.getElementById("fileInput");
+            const imagePreviewContainer = document.querySelector(".image-preview");
+            const previewImg = imagePreviewContainer.querySelector("img");
+
+            fileInput.addEventListener("change", function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    imagePreviewContainer.classList.remove("hidden");
+                    previewImg.src = URL.createObjectURL(file);
+                }
+            });
+
+            const closeButton = document.querySelector(".close-button");
+            if (closeButton) {
+                closeButton.addEventListener("click", function () {
+                    imagePreviewContainer.classList.add("hidden");
+                    fileInput.value = "";
+                });
+            }
+
+            // Handle Post button click - read file data from the file input
+            const postBtn = document.getElementById("postBtn");
+            postBtn.addEventListener("click", function () {
+                const file = fileInput.files[0];
+                // Optional: Get caption from textarea if needed
+                const caption = document.querySelector(".create-post-input textarea").value;
+                if (!file) {
+                    alert("Please select an image file to post.");
+                    return;
+                }
+                // Read the file as base64
+                const reader = new FileReader();
+                reader.onload = async function () {
+                    const base64Data = reader.result; // Contains "data:image/png;base64,...."
+                    // Send post data to the backend
+                    const postData = {
+                        caption: caption,
+                        image: base64Data
+                    };
+                    try {
+                        const response = await fetch("/create_post", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(postData)
+                        });
+                        const result = await response.json();
+                        if (result.status === "success") {
+                            alert("Post created successfully!");
+                            // Optionally, refresh posts or clear form fields:
+                            document.querySelector(".create-post-input textarea").value = "";
+                            imagePreviewContainer.classList.add("hidden");
+                            fileInput.value = "";
+                            // Refresh posts
+                            fetchPosts(); // Ensure you have a function to fetch posts
+                        } else {
+                            alert("Error: " + result.message);
+                        }
+                    } catch (error) {
+                        console.error("Error posting:", error);
+                        alert("An unexpected error occurred while creating the post.");
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+
+        });
+
+    </script>
+</body>
+
+</html>
